@@ -1,0 +1,66 @@
+{
+  "builders": [{
+    "type": "virtualbox-iso",
+    "vboxmanage": [
+      ["modifyvm", "{{.Name}}", "--memory", "4096"],
+      ["modifyvm", "{{.Name}}", "--vram", "48"],
+      ["modifyvm", "{{.Name}}", "--cpus", "2"]
+    ],
+    "guest_additions_mode": "{{ user `guest_additions_mode` }}",
+    "guest_additions_path": "C:/users/vagrant/VBoxGuestAdditions.iso",
+    "guest_os_type": "Windows2016_64",
+    "headless": "{{ user `headless` }}",
+    "iso_url": "{{ user `iso_mirror` }}/{{user `iso_name`}}",
+    "iso_target_path" : "{{user `iso_path`}}/{{user `iso_name`}}",
+    "iso_checksum": "{{ user `iso_checksum` }}",
+    "iso_checksum_type": "sha1",
+    "output_directory": "{{user `artifacts_path`}}/packer-{{user `template`}}-virtualbox",
+    "communicator": "winrm",
+    "winrm_username": "vagrant",
+    "winrm_password": "vagrant",
+    "winrm_timeout": "12h",
+    "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
+    "shutdown_timeout": "15m",
+    "floppy_files": [
+      "config-2019/Autounattend.xml"
+    ]
+  },
+    {
+      "type": "vmware-iso",
+      "vmx_data": {
+        "memsize": "4096",
+        "numvcpus": "2",
+        "scsi0.virtualDev": "lsisas1068",
+        "scsi0.present": "TRUE"
+      },
+      "guest_os_type": "windows9srv-64",
+      "headless": "{{ user `headless` }}",
+      "iso_url": "{{ user `iso_mirror` }}/{{user `iso_name`}}",
+      "iso_target_path" : "{{user `iso_path`}}/{{user `iso_name`}}",
+      "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_checksum_type": "sha1",
+      "output_directory": "{{user `artifacts_path`}}/packer-{{user `template`}}-vmware",
+      "communicator": "winrm",
+      "winrm_username": "vagrant",
+      "winrm_password": "vagrant",
+      "winrm_timeout": "12h",
+      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\"",
+      "shutdown_timeout": "15m",
+      "floppy_files": [
+        "config-2019/Autounattend.xml"
+      ]
+    }
+  ],
+  "provisioners": [
+  ],
+  "variables": {
+    "artifacts_path": "/mnt/linux-230gb/home/.vagrant.custom/boxes",
+    "iso_path": "/home/user/Downloads",
+    "guest_additions_mode": "attach",
+    "headless": "false",
+    "iso_checksum": "91e3a2f1acc39af21353c7cc105c799494d7539f",
+    "iso_name": "17763.253.190108-0006.rs5_release_svc_refresh_SERVER_EVAL_x64FRE_en-us.iso",
+    "iso_mirror": "https://software-download.microsoft.com/download/sg",
+    "template": "windows-2019-standard"
+  }
+}
